@@ -1,0 +1,21 @@
+{
+  "name": "require-from-drive",
+  "version": "1.0.0",
+  "description": "Require files from google drive. This is a good way to make sure secrets are always the same from person to person.",
+  "main": "require_from_drive.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "require",
+    "google",
+    "drive",
+    "http"
+  ],
+  "author": "Tyler Murphy <tylermurphyj@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "require-from-string": "^1.2.1",
+    "sync-request": "^3.0.1"
+  }
+}
