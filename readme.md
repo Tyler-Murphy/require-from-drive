@@ -6,6 +6,8 @@ npm install --save require-from-drive
 
 ### Use
 
+**IMPORTANT: Each time the apps script is changed, you'll need to deploy a new version as a web app. Otherwise, your changes won't end up in the live version.**
+
 First, follow these steps to set up Google Drive:
 
 1. Create a folder on Google Drive. Name it something like "app secrets"
@@ -30,3 +32,10 @@ const config = requireFromDrive('path/to/project/config.json')
 ### Test
 
 To run the apps script tests, use the apps script viewer/editor to select "test" from the "Run" menu. An error will be thrown and a message will pop up if any test fails.
+
+### Possible improvements
+
+- Limit token access to particular subdirectories or files
+- Add pictures to the setup instructions
+- Client libraries for other languages
+- Client library tests... maybe a public google drive folder with some test folders and files could be set up. Apps script execution limits might be reached if tests are run too frequently.
