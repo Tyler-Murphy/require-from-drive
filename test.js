@@ -1,2 +1,1 @@
-console.log('add some tests')
-process.exit(1)
+console.log('see the readme for instructions on testing the apps script')

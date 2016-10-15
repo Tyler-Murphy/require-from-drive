@@ -1,6 +1,5 @@
 const request = require('sync-request')
 const requireFromString = require('require-from-string')
-const path = require('path')
 
 const address = process.env.REQUIRE_FROM_DRIVE_SERVER_ADDRESS
 const token = process.env.REQUIRE_FROM_DRIVE_SERVER_TOKEN
@@ -10,33 +9,32 @@ module.exports = {
   requireFromDrive
 }
 
-function requireFromDrive (filePath) {
-  let response = requestWithCache(filePath)
+function requireFromDrive (path) {
+  let response = requestWithCache(path)
 
   try {
     return JSON.parse(response)
   } catch (error) {
-    return requireFromString(response, filePath)
+    return requireFromString(response, path)
   }
 }
 
-function requestWithCache (filePath) {
-  if (requestCache.has(filePath)) {
-    return requestCache.get(filePath)
+function requestWithCache (path) {
+  if (requestCache.has(path)) {
+    return requestCache.get(path)
   }
 
-  let splitPath = filePath.split(path.posix.sep)
   let response = request('GET', address, {
     qs: {
-      splitPath: JSON.stringify(splitPath),
+      path,
       token
-    },
+    }
   }).getBody('utf-8')
 
   if (/^Error: /.test(response)) {
     throw new Error(response)
   }
 
-  requestCache.set(filePath, response)
+  requestCache.set(path, response)
   return response
 }

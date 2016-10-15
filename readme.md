@@ -26,3 +26,7 @@ const requireFromDrive = require('require-from-drive')
 const myModule = requireFromDrive('path/to/project/module.js')
 const config = requireFromDrive('path/to/project/config.json')
 ```
+
+### Test
+
+To run the apps script tests, use the apps script viewer/editor to select "test" from the "Run" menu. An error will be thrown and a message will pop up if any test fails.
