@@ -20,5 +20,10 @@
   },
   "devDependencies": {
     "standard": "^8.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tyler-Murphy/require-from-drive"
+  },
+  "bugs": "https://github.com/Tyler-Murphy/require-from-drive/issues"
 }
