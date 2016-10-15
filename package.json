@@ -4,7 +4,7 @@
   "description": "Require files from google drive. This is a good way to make sure secrets are always the same from person to person.",
   "main": "require_from_drive.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "standard --fix && node test.js"
   },
   "keywords": [
     "require",
@@ -17,5 +17,8 @@
   "dependencies": {
     "require-from-string": "^1.2.1",
     "sync-request": "^3.0.1"
+  },
+  "devDependencies": {
+    "standard": "^8.4.0"
   }
 }
