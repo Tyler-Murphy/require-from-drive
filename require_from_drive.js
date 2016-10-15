@@ -31,8 +31,11 @@ function requestWithCache (filePath) {
       splitPath: JSON.stringify(splitPath),
       token
     },
-    cache: 'file'
   }).getBody('utf-8')
+
+  if (/^Error: /.test(response)) {
+    throw new Error(response)
+  }
 
   requestCache.set(filePath, response)
   return response
