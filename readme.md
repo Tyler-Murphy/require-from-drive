@@ -24,7 +24,7 @@ First, follow these steps to set up Google Drive:
 Then do this!
 
 ```js
-const requireFromDrive = require('require-from-drive')
+const requireFromDrive = require('require-from-drive').requireFromDrive
 const myModule = requireFromDrive('path/to/project/module.js')
 const config = requireFromDrive('path/to/project/config.json')
 ```
