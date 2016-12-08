@@ -13,7 +13,7 @@ var tokens = {
 // Constants
 var errorPrefix = 'Error: '
 var invalidTokenError = 'invalid token query parameter'
-var missingPathError = 'missing splitPath query parameter'
+var missingPathError = 'missing path query parameter'
 var missingFolderError = 'could not find folder'
 var missingFileError = 'could not find file'
 var unreadableFileError = 'found file, but could not read file'
