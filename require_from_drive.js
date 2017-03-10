@@ -1,9 +1,19 @@
 const request = require('sync-request')
 const requireFromString = require('require-from-string')
 
-const address = process.env.REQUIRE_FROM_DRIVE_SERVER_ADDRESS
-const token = process.env.REQUIRE_FROM_DRIVE_SERVER_TOKEN
+const addressVariableName = 'REQUIRE_FROM_DRIVE_SERVER_ADDRESS'
+const tokenVariableName = 'REQUIRE_FROM_DRIVE_SERVER_TOKEN'
+const address = process.env[addressVariableName]
+const token = process.env[tokenVariableName]
 const requestCache = new Map()
+
+if (!address) {
+  throw new Error(`Set the ${addressVariableName} environment variable`)
+}
+
+if (!token) {
+  throw new Error(`Set the ${tokenVariableName} environment variable`)
+}
 
 module.exports = {
   requireFromDrive
