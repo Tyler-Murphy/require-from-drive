@@ -19,8 +19,8 @@ module.exports = {
   requireFromDrive
 }
 
-function requireFromDrive (path) {
-  let response = requestWithCache(path)
+function requireFromDrive (path, cache = true) {
+  let response = cache ? requestWithCache(path) : requestWithoutCache(path)
 
   try {
     return JSON.parse(response)
@@ -30,10 +30,14 @@ function requireFromDrive (path) {
 }
 
 function requestWithCache (path) {
-  if (requestCache.has(path)) {
-    return requestCache.get(path)
+  if (!requestCache.has(path)) {
+    requestCache.set(path, requestWithoutCache(path))
   }
 
+  return requestCache.get(path)
+}
+
+function requestWithoutCache (path) {
   let response = request('GET', address, {
     qs: {
       path,
@@ -45,6 +49,5 @@ function requestWithCache (path) {
     throw new Error(response)
   }
 
-  requestCache.set(path, response)
   return response
 }

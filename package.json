@@ -20,6 +20,7 @@
     "sync-request": "^3.0.1"
   },
   "devDependencies": {
+    "parallel-test": "^1.0.0",
     "standard": "^8.4.0"
   },
   "repository": {

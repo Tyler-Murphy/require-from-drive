@@ -1,1 +1,1 @@
-export function requireFromDrive(path: string): { [key: string]: any }
+export function requireFromDrive(path: string, cache?: boolean): { [key: string]: any }
