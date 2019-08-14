@@ -40,7 +40,7 @@ test('caches results so that the second retrieval is fast', () => {
   assert.ok(Date.now() - startTime <= 1)
 })
 
-test('can retrieve results without using the cache for cases where files are expected to change frequently and must remain up to date', () => {
+test('can retrieve results without using the cache', () => {
   requireTestFile()
 
   const startTime = Date.now()
