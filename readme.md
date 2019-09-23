@@ -15,11 +15,12 @@ First, follow these steps to set up Google Drive:
 3. Get the folder ID and put it in line 1 of the apps script
 4. Change the default token to something more secure, and give it a description
 5. Add separate tokens for each app or server that will request secrets
-6. Create a version of the apps script
-7. Deploy as a web app, and get the url.
-8. Set the `REQUIRE_FROM_DRIVE_SERVER_ADDRESS` environment variable to the web app url
-9. Set the `REQUIRE_FROM_DRIVE_SERVER_TOKEN` to one of the tokens
-10. Add sub-directories and files. Paths to files are relative to the folder containing the apps script
+6. Create a blank, single-column spreadsheet in the folder, and paste its entire URL in the `spreadsheetLoggingUrl` variable. Logs about requests will be stored in this spreadsheet.
+7. Create a version of the apps script
+8. Deploy as a web app, and get the url.
+9. Set the `REQUIRE_FROM_DRIVE_SERVER_ADDRESS` environment variable to the web app url
+10. Set the `REQUIRE_FROM_DRIVE_SERVER_TOKEN` to one of the tokens
+11. Add sub-directories and files. Paths to files are relative to the folder containing the apps script
 
 Then do this!
 

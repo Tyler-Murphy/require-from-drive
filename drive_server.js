@@ -6,11 +6,13 @@ Logger
 */
 
 var thisFolderId = 'your ID here'
+var spreadsheetLoggingUrl = 'your spreadsheet URL here'
 var tokens = {
   'token': 'token description'
 }
 
 // Constants
+var successPrefix = 'Success: '
 var errorPrefix = 'Error: '
 var invalidTokenError = 'invalid token query parameter'
 var missingPathError = 'missing path query parameter'
@@ -19,6 +21,8 @@ var missingFileError = 'could not find file'
 var unreadableFileError = 'found file, but could not read file'
 
 function doGet (request) {
+  var startTime = Date.now()
+
   if (!(request.parameters.token in tokens)) {
     return errorText(invalidTokenError)
   }
@@ -60,6 +64,8 @@ function doGet (request) {
     return errorText(unreadableFileError)
   }
 
+  log(successPrefix + 'Token "' + tokens[request.parameters.token] + '" used to retrieve path "' + request.parameters.path + '" in ' + (Date.now() - startTime) + ' milliseconds')
+
   return text(fileText)
 }
 
@@ -70,7 +76,18 @@ function text (string) {
 }
 
 function errorText (string) {
+  log(errorPrefix + string)
   return text(errorPrefix + string)
+}
+
+function log (string) {
+  var messageWithTimestamp = (new Date()).toISOString() + ' ' + string
+
+  Logger.log(messageWithTimestamp)
+
+  if (spreadsheetLoggingUrl) {
+    SpreadsheetApp.openByUrl(spreadsheetLoggingUrl).appendRow([messageWithTimestamp])
+  }
 }
 
 // Tests
