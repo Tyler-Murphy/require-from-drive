@@ -2,7 +2,8 @@
 DriveApp,
 DocumentApp,
 ContentService,
-Logger
+Logger,
+SpreadsheetApp
 */
 
 var thisFolderId = 'your ID here'
