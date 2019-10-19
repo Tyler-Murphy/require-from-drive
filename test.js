@@ -9,9 +9,9 @@ const testValue = {
   hi: 'there'
 }
 
-function requireTestFile (cache = true) {
+function requireTestFile ({ cache, cacheInFile } = {}) {
   try {
-    return requireFromDrive(testPath, cache)
+    return requireFromDrive({ path: testPath, cache, cacheInFile })
   } catch (error) {
     console.log(`This test requires the file ${testPath} to exist in the secret server folder in Google Drive and to contain ${JSON.stringify(testValue)}. If it doesn't exist, this test will fail. Set it up if necessary.`)
 
@@ -27,7 +27,7 @@ test('can retrieve secrets from Google Drive', () => {
 })
 
 test('throws for files that do not exist', () => {
-  assert.throws(() => requireFromDrive(Math.random().toString()))
+  assert.throws(() => requireFromDrive({ path: Math.random().toString() }))
 })
 
 test('caches results so that the second retrieval is fast', () => {
@@ -40,12 +40,22 @@ test('caches results so that the second retrieval is fast', () => {
   assert.ok(Date.now() - startTime <= 1)
 })
 
-test('can retrieve results without using the cache', () => {
+test('caches results in a file so that the second retrieval is fast even if the memory cache is not used', () => {
   requireTestFile()
 
   const startTime = Date.now()
 
-  requireTestFile(false)
+  requireTestFile({ cache: false })
+
+  assert.ok(Date.now() - startTime <= 10)
+})
+
+test('can retrieve results without using a cache', () => {
+  requireTestFile()
+
+  const startTime = Date.now()
+
+  requireTestFile({ cache: false, cacheInFile: false })
 
   assert.ok(Date.now() - startTime > 100)
 })

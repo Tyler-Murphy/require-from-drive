@@ -30,22 +30,33 @@ module.exports = {
 function requireFromDrive ({
   path,
   cache = true,
-  cacheInFile = true,
+  cacheInFile = true
 }) {
+  let responseFromMemoryCache
   let responseFromFileCache
 
   debugLog(path, 'starting load process')
 
-  if (cacheInFile) {
+  if (cache) {
+    responseFromMemoryCache = requestCache.get(path)
+    debugLog(path, 'retrieved from memory cache', responseFromMemoryCache)
+  }
+
+  if (cacheInFile && !responseFromMemoryCache) {
     responseFromFileCache = loadFromCacheFile(path)
     debugLog(path, 'retrieved from file cache', responseFromFileCache)
   }
 
-  const response = responseFromFileCache || (cache ? requestWithCache(path) : requestWithoutCache(path))
+  const response = responseFromMemoryCache || responseFromFileCache || getFromDrive(path)
 
   if (cacheInFile && !responseFromFileCache) {
     debugLog(path, 'caching response in file')
     fs.writeFileSync(getCacheFileName(path), response)
+  }
+
+  if (cache && !responseFromMemoryCache) {
+    debugLog(path, 'caching response in memory')
+    requestCache.set(path, response)
   }
 
   try {
@@ -73,7 +84,7 @@ function loadFromCacheFile (path) {
 
       return null
     }
-  } catch(error) {
+  } catch (error) {
     if (!error.message.includes('ENOENT')) {
       throw error
     }
@@ -88,21 +99,11 @@ function loadFromCacheFile (path) {
   return fs.readFileSync(fileName, 'utf-8')
 }
 
-function getCacheFileName(path) {
+function getCacheFileName (path) {
   return fileCachePrefix + encodeURIComponent(path)
 }
 
-function requestWithCache (path) {
-  if (!requestCache.has(path)) {
-    debugLog(path, 'using in-memory cache')
-
-    requestCache.set(path, requestWithoutCache(path))
-  }
-
-  return requestCache.get(path)
-}
-
-function requestWithoutCache (path) {
+function getFromDrive (path) {
   debugLog(path, 'retrieving from Drive')
 
   const startTime = Date.now()
