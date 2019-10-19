@@ -26,9 +26,15 @@ Then do this!
 
 ```js
 const requireFromDrive = require('require-from-drive').requireFromDrive
-const myModule = requireFromDrive('path/to/project/module.js')
-const config = requireFromDrive('path/to/project/config.json')
+const myModule = requireFromDrive({ path: 'path/to/project/module.js' })
+const config = requireFromDrive({ path: 'path/to/project/config.json' })
 ```
+
+A memory cache and a file cache are enabled by default. The file cache uses file names prefixed with `.require-from-drive`.
+
+The memory cache can be disabled by setting the `cache` option to `false`. The file cache can be disabled by setting the `cacheInFile` option to `false`.
+
+**IMPORTANT: Because there's a file cache, you should add `.require-from-drive*` to your `.gitignore`**
 
 ### Test
 
