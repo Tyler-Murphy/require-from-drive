@@ -36,6 +36,8 @@ The memory cache can be disabled by setting the `cache` option to `false`. The f
 
 **IMPORTANT: Because there's a file cache, you should add `.require-from-drive*` to your `.gitignore`**
 
+There's also an asynchronous version of the function, exported as `requireFromDriveAsynchronously`. It doesn't support caching.
+
 ### Test
 
 To run the apps script tests, use the apps script viewer/editor to select "test" from the "Run" menu. An error will be thrown and a message will pop up if any test fails.

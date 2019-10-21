@@ -1,4 +1,5 @@
 const request = require('sync-request')
+const fetch = require('node-fetch')
 const requireFromString = require('require-from-string')
 const fs = require('fs')
 
@@ -24,7 +25,8 @@ if (!token) {
 }
 
 module.exports = {
-  requireFromDrive
+  requireFromDrive,
+  requireFromDriveAsynchronously
 }
 
 function requireFromDrive ({
@@ -58,6 +60,23 @@ function requireFromDrive ({
     debugLog(path, 'caching response in memory')
     requestCache.set(path, response)
   }
+
+  try {
+    debugLog(path, 'attempting to parse as JSON')
+
+    return JSON.parse(response)
+  } catch (error) {
+    debugLog(path, 'failed to parse as JSON... falling back to parsing as a module')
+
+    return requireFromString(response, path)
+  }
+}
+
+/** Caching is not supported for asynchronous requires */
+async function requireFromDriveAsynchronously ({ path }) {
+  debugLog(path, 'starting asynchronous load')
+
+  const response = await getFromDriveAsynchronously(path)
 
   try {
     debugLog(path, 'attempting to parse as JSON')
@@ -115,6 +134,21 @@ function getFromDrive (path) {
   }).getBody('utf-8')
 
   debugLog(path, `retrieved from Drive in ${Date.now() - startTime} milliseconds`)
+
+  if (/^Error: /.test(response)) {
+    throw new Error(response)
+  }
+
+  return response
+}
+
+async function getFromDriveAsynchronously (path) {
+  debugLog(path, 'retrieving from Drive asynchronously')
+
+  const startTime = Date.now()
+  const response = await (await fetch(`${address}?path=${encodeURIComponent(path)}&token=${encodeURIComponent(token)}`)).text()
+
+  debugLog(path, `retrieved from Drive asynchronously in ${Date.now() - startTime} milliseconds`)
 
   if (/^Error: /.test(response)) {
     throw new Error(response)

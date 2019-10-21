@@ -1,6 +1,9 @@
 const test = require('parallel-test').default
 const assert = require('assert')
-const requireFromDrive = require('./require_from_drive').requireFromDrive
+const {
+  requireFromDrive,
+  requireFromDriveAsynchronously
+} = require('./require_from_drive')
 
 console.log('see the readme for instructions on testing the apps script')
 
@@ -58,4 +61,13 @@ test('can retrieve results without using a cache', () => {
   requireTestFile({ cache: false, cacheInFile: false })
 
   assert.ok(Date.now() - startTime > 100)
+})
+
+test('can retrieve results asynchronously, for use in cases where it is not helpful for the load to be blocking', async () => {
+  const result = await requireFromDriveAsynchronously({ path: testPath })
+
+  assert.deepStrictEqual(
+    result,
+    testValue
+  )
 })

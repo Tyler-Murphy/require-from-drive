@@ -1,9 +1,10 @@
-export function requireFromDrive({
-  path,
-  cache,
-  cacheInFile,
-}: {
+type Options = {
   path: string,
   cache?: boolean,
   cacheInFile?: boolean,
-}): { [key: string]: any }
+}
+type Result = { [key: string]: any }
+
+export function requireFromDrive(options: Options): Result
+
+export function requireFromDriveAsynchronously(options: Pick<Options, 'path'>): Promise<Result>

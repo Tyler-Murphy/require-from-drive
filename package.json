@@ -16,6 +16,7 @@
   "author": "Tyler Murphy <tylermurphyj@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "node-fetch": "^2.6.0",
     "require-from-string": "^1.2.1",
     "sync-request": "^3.0.1"
   },
