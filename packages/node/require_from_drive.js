@@ -99,7 +99,7 @@ function loadFromCacheFile (path) {
     debugLog(fileName, `found cache file with age ${ageMilliseconds} milliseconds`)
 
     if (Date.now() - lastModifiedTime.getTime() > maximumFileCacheAgeMilliseconds) {
-      debugLog(fileName, `cache file is too old... ignoring it`)
+      debugLog(fileName, 'cache file is too old... ignoring it')
 
       return null
     }
@@ -110,10 +110,10 @@ function loadFromCacheFile (path) {
 
     debugLog(fileName, 'no cache file exists')
 
-    return null  // the file doesn't exist
+    return null // the file doesn't exist
   }
 
-  debugLog(fileName, `reading cache file`)
+  debugLog(fileName, 'reading cache file')
 
   return fs.readFileSync(fileName, 'utf-8')
 }
@@ -126,7 +126,7 @@ function getFromDrive (path) {
   debugLog(path, 'retrieving from Drive')
 
   const startTime = Date.now()
-  let response = request('GET', address, {
+  const response = request('GET', address, {
     qs: {
       path,
       token

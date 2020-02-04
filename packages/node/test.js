@@ -7,7 +7,7 @@ const {
 
 console.log('see the readme for instructions on testing the apps script')
 
-const testPath = `testing/test.json`
+const testPath = 'testing/test.json'
 const testValue = {
   hi: 'there'
 }
