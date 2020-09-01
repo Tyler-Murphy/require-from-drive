@@ -12,5 +12,3 @@ class TestRequireFromDrive < MiniTest::Unit::TestCase
     assert_raises { RequireFromDrive.load('testing/fakeFile.json') }
   end
 end
-
-
