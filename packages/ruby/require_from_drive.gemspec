@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'require_from_drive'
-  s.version = "1.0.0"
+  s.version = "1.0.1"
   s.license = 'ISC'
   s.authors = ['Tyler Murphy']
   s.summary = 'load configuration files from Google Drive'
