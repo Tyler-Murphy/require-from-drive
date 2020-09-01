@@ -12,7 +12,7 @@ class RequireFromDrive
   end
 
   if SERVER_TOKEN.nil?
-    fail "The #{SERVER_TOKEN} environment variable must be set"
+    fail "The #{SERVER_TOKEN_ENVIRONMENT_VARIABLE_NAME} environment variable must be set"
   end
 
   def self.load(path)
