@@ -19,8 +19,8 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
 
     env:
-      REQUIRE_FROM_DRIVE_SERVER_ADDRESS: https://script.google.com/macros/s/AKfycbxVLd1P1PuH6Af80vCOxJU4oR-7x84CEJvJC4Yc_O1mMAs9kTi0/exec
-      REQUIRE_FROM_DRIVE_SERVER_TOKEN: testToken
+      REQUIRE_FROM_DRIVE_SERVER_ADDRESS: ${{ secrets.REQUIRE_FROM_DRIVE_SERVER_ADDRESS }}
+      REQUIRE_FROM_DRIVE_SERVER_TOKEN: ${{ secrets.REQUIRE_FROM_DRIVE_SERVER_TOKEN }}
 
     defaults:
       run:
