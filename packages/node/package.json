@@ -1,6 +1,6 @@
 {
   "name": "require-from-drive",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "Require files from google drive. This is a good way to make sure secrets are always the same from person to person.",
   "main": "require_from_drive.js",
   "types": "require_from_drive.d.ts",
