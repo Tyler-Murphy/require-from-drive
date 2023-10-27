@@ -10,7 +10,7 @@
   },
   "scripts": {
     "test": "standard --fix && node test.js",
-    "prepare": "npx -p typescript tsc require_from_drive.js --lib ES2022 --declaration --allowJs --emitDeclarationOnly"
+    "prepare": "tsc require_from_drive.js --lib ES2022 --declaration --allowJs --emitDeclarationOnly"
   },
   "keywords": [
     "require",
