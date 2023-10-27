@@ -1,5 +1,7 @@
 ### Install
 
+**As of v3, the module is ESM**
+
 ```
 npm install --save require-from-drive
 ```
@@ -25,9 +27,10 @@ First, follow these steps to set up Google Drive:
 Then do this!
 
 ```js
-const requireFromDrive = require('require-from-drive').requireFromDrive
-const myModule = requireFromDrive({ path: 'path/to/project/module.js' })
-const config = requireFromDrive({ path: 'path/to/project/config.json' })
+import { requireFromDrive } from 'require-from-drive'
+
+const myModule = await requireFromDrive({ path: 'path/to/project/module.js' })
+const config = await requireFromDrive({ path: 'path/to/project/config.json' })
 ```
 
 A memory cache and a file cache are enabled by default. The file cache uses file names prefixed with `.require-from-drive`.
@@ -35,8 +38,6 @@ A memory cache and a file cache are enabled by default. The file cache uses file
 The memory cache can be disabled by setting the `cache` option to `false`. The file cache can be disabled by setting the `cacheInFile` option to `false`.
 
 **IMPORTANT: Because there's a file cache, you should add `.require-from-drive*` to your `.gitignore`**
-
-There's also an asynchronous version of the function, exported as `requireFromDriveAsynchronously`. It doesn't support caching.
 
 ### Test
 
