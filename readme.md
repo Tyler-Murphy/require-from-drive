@@ -47,7 +47,4 @@ To run the apps script tests, use the apps script viewer/editor to select "test"
 
 - Limit token access to particular subdirectories or files
 - Add pictures to the setup instructions
-- Client libraries for other languages
-- Client library tests... maybe a public google drive folder with some test folders and files could be set up. Apps script execution limits might be reached if tests are run too frequently.
-- Access logs
 - Require tokens to be a certain minimum length
