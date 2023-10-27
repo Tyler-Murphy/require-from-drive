@@ -1,9 +1,8 @@
-const test = require('parallel-test').default
-const assert = require('assert')
-const {
-  requireFromDrive,
-  requireFromDriveAsynchronously
-} = require('./require_from_drive')
+import test from 'parallel-test'
+import assert from 'assert'
+import {
+  requireFromDrive
+} from './require_from_drive.js'
 
 console.log('see the readme for instructions on testing the apps script')
 
@@ -12,6 +11,10 @@ const testValue = {
   hi: 'there'
 }
 
+/**
+ * @param {Omit<import('./require_from_drive.js').Options, 'path'>} options
+ * @returns {import('./require_from_drive.js').Result}
+ */
 function requireTestFile ({ cache, cacheInFile } = {}) {
   try {
     return requireFromDrive({ path: testPath, cache, cacheInFile })
@@ -22,52 +25,43 @@ function requireTestFile ({ cache, cacheInFile } = {}) {
   }
 }
 
-test('can retrieve secrets from Google Drive', () => {
+test('can retrieve secrets from Google Drive', async () => {
   assert.deepStrictEqual(
-    requireTestFile(),
+    await requireTestFile(),
     testValue
   )
 })
 
-test('throws for files that do not exist', () => {
-  assert.throws(() => requireFromDrive({ path: Math.random().toString() }))
+test('rejects for files that do not exist', async () => {
+  await assert.rejects(() => requireFromDrive({ path: Math.random().toString() }))
 })
 
-test('caches results so that the second retrieval is fast', () => {
-  requireTestFile()
+test('caches results so that the second retrieval is fast', async () => {
+  await requireTestFile()
 
   const startTime = Date.now()
 
-  requireTestFile()
+  await requireTestFile()
 
   assert.ok(Date.now() - startTime <= 1)
 })
 
-test('caches results in a file so that the second retrieval is fast even if the memory cache is not used', () => {
-  requireTestFile()
+test('caches results in a file so that the second retrieval is fast even if the memory cache is not used', async () => {
+  await requireTestFile()
 
   const startTime = Date.now()
 
-  requireTestFile({ cache: false })
+  await requireTestFile({ cache: false })
 
   assert.ok(Date.now() - startTime <= 10)
 })
 
-test('can retrieve results without using a cache', () => {
-  requireTestFile()
+test('can retrieve results without using a cache', async () => {
+  await requireTestFile()
 
   const startTime = Date.now()
 
-  requireTestFile({ cache: false, cacheInFile: false })
+  await requireTestFile({ cache: false, cacheInFile: false })
 
   assert.ok(Date.now() - startTime > 100)
-})
-
-test('can retrieve results asynchronously, for use in cases where it is not helpful for the load to be blocking', async () => {
-  const result = await requireFromDriveAsynchronously({ path: testPath })
-
-  assert.deepStrictEqual(
-    result,
-    testValue
-  )
 })

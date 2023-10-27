@@ -1,15 +1,18 @@
-const request = require('sync-request')
-const fetch = require('node-fetch')
-const requireFromString = require('require-from-string')
-const fs = require('fs')
+import requireFromString from 'require-from-string'
+import * as fs from 'node:fs/promises'
 
 const addressVariableName = 'REQUIRE_FROM_DRIVE_SERVER_ADDRESS'
 const tokenVariableName = 'REQUIRE_FROM_DRIVE_SERVER_TOKEN'
 const address = process.env[addressVariableName]
 const token = process.env[tokenVariableName]
+/** @type {Map<string, string>} */
 const requestCache = new Map()
 const fileCachePrefix = '.require-from-drive'
 const maximumFileCacheAgeMilliseconds = 3600e3
+
+/**
+ * @type {typeof console.log}
+ */
 const debugLog = (...messages) => {
   if (process.env.DEBUG === 'true') {
     console.log('[require-from-drive debug]:', ...messages)
@@ -24,12 +27,27 @@ if (!token) {
   throw new Error(`Set the ${tokenVariableName} environment variable`)
 }
 
-module.exports = {
-  requireFromDrive,
-  requireFromDriveAsynchronously
+export {
+  requireFromDrive
 }
 
-function requireFromDrive ({
+/**
+ * @typedef {{
+ *   path: string,
+ *   cache?: boolean,
+ *   cacheInFile?: boolean,
+ * }} Options
+ */
+
+/**
+ * @typedef {{ [key: string]: any }} Result
+ */
+
+/**
+ * @param {Options} options
+ * @returns {Promise<Result>}
+ */
+async function requireFromDrive ({
   path,
   cache = true,
   cacheInFile = true
@@ -45,15 +63,16 @@ function requireFromDrive ({
   }
 
   if (cacheInFile && !responseFromMemoryCache) {
-    responseFromFileCache = loadFromCacheFile(path)
+    responseFromFileCache = await loadFromCacheFile(path)
     debugLog(path, 'retrieved from file cache', responseFromFileCache)
   }
 
-  const response = responseFromMemoryCache || responseFromFileCache || getFromDrive(path)
+  const response = responseFromMemoryCache || responseFromFileCache || await getFromDrive(path)
 
   if (cacheInFile && !responseFromFileCache) {
-    debugLog(path, 'caching response in file')
-    fs.writeFileSync(getCacheFileName(path), response)
+    debugLog(path, 'caching response in file in background')
+    fs.writeFile(getCacheFileName(path), response)
+      .catch(error => debugLog('Failed to save response in file:', String(error)))
   }
 
   if (cache && !responseFromMemoryCache) {
@@ -68,32 +87,23 @@ function requireFromDrive ({
   } catch (error) {
     debugLog(path, 'failed to parse as JSON... falling back to parsing as a module')
 
-    return requireFromString(response, path)
+    try {
+      return requireFromString(response, path)
+    } catch (error) {
+      throw new Error(`Failed to parse Drive path "${path}" as JSON or as module. Here's the raw response: ${response}`)
+    }
   }
 }
 
-/** Caching is not supported for asynchronous requires */
-async function requireFromDriveAsynchronously ({ path }) {
-  debugLog(path, 'starting asynchronous load')
-
-  const response = await getFromDriveAsynchronously(path)
-
-  try {
-    debugLog(path, 'attempting to parse as JSON')
-
-    return JSON.parse(response)
-  } catch (error) {
-    debugLog(path, 'failed to parse as JSON... falling back to parsing as a module')
-
-    return requireFromString(response, path)
-  }
-}
-
-function loadFromCacheFile (path) {
+/**
+ * @param {Options['path']} path
+ * @returns {Promise<string | null>}
+ */
+async function loadFromCacheFile (path) {
   const fileName = getCacheFileName(path)
 
   try {
-    const { mtime: lastModifiedTime } = fs.statSync(fileName)
+    const { mtime: lastModifiedTime } = await fs.stat(fileName)
     const ageMilliseconds = Date.now() - lastModifiedTime.getTime()
 
     debugLog(fileName, `found cache file with age ${ageMilliseconds} milliseconds`)
@@ -115,44 +125,46 @@ function loadFromCacheFile (path) {
 
   debugLog(fileName, 'reading cache file')
 
-  return fs.readFileSync(fileName, 'utf-8')
+  return fs.readFile(fileName, 'utf-8')
 }
 
+/**
+ * @param {Options['path']} path
+ * @returns {string}
+ */
 function getCacheFileName (path) {
   return fileCachePrefix + encodeURIComponent(path)
 }
 
-function getFromDrive (path) {
+/**
+ * @param {Options['path']} path
+ * @returns {Promise<string>}
+ */
+async function getFromDrive (path) {
   debugLog(path, 'retrieving from Drive')
 
   const startTime = Date.now()
-  const response = request('GET', address, {
-    qs: {
-      path,
-      token
-    }
-  }).getBody('utf-8')
+  const response = await fetch(`${assertDefined(address)}?path=${encodeURIComponent(path)}&token=${encodeURIComponent(assertDefined(token))}`)
+  const responseText = await response.text()
+
+  if (response.status !== 200) {
+    throw new Error(`${response.status} - ${response.statusText} - Failed to retrieve from Drive: ${responseText}`)
+  }
 
   debugLog(path, `retrieved from Drive in ${Date.now() - startTime} milliseconds`)
 
-  if (/^Error: /.test(response)) {
-    throw new Error(response)
+  if (/^Error: /.test(responseText)) {
+    throw new Error(responseText)
   }
 
-  return response
+  return responseText
 }
 
-async function getFromDriveAsynchronously (path) {
-  debugLog(path, 'retrieving from Drive asynchronously')
-
-  const startTime = Date.now()
-  const response = await (await fetch(`${address}?path=${encodeURIComponent(path)}&token=${encodeURIComponent(token)}`)).text()
-
-  debugLog(path, `retrieved from Drive asynchronously in ${Date.now() - startTime} milliseconds`)
-
-  if (/^Error: /.test(response)) {
-    throw new Error(response)
+/** @type {<T>(thing: T) => NonNullable<T>} */
+function assertDefined (thing) {
+  if (thing == null) {
+    throw new Error('Not defined')
   }
 
-  return response
+  return thing
 }

@@ -2,10 +2,15 @@
   "name": "require-from-drive",
   "version": "2.1.5",
   "description": "Require files from google drive. This is a good way to make sure secrets are always the same from person to person.",
+  "type": "module",
   "main": "require_from_drive.js",
-  "types": "require_from_drive.d.ts",
+  "types": "require_from_drive.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "test": "standard --fix && node test.js"
+    "test": "standard --fix && node test.js",
+    "prepare": "tsc require_from_drive.js --lib ES2022 --declaration --allowJs --emitDeclarationOnly"
   },
   "keywords": [
     "require",
@@ -16,17 +21,17 @@
   "author": "Tyler Murphy <tylermurphyj@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.6.7",
-    "require-from-string": "^1.2.1",
-    "sync-request": "^3.0.1"
+    "require-from-string": "^1.2.1"
   },
   "devDependencies": {
-    "parallel-test": "^1.0.0",
-    "standard": "^16.0.4"
+    "@types/node": "^18.18.7",
+    "parallel-test": "^3.0.4",
+    "standard": "^17.1.0",
+    "typescript": "^5.2.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Tyler-Murphy/require-from-drive"
+    "url": "git+https://github.com/Tyler-Murphy/require-from-drive.git"
   },
   "bugs": "https://github.com/Tyler-Murphy/require-from-drive/issues"
 }
