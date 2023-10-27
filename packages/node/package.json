@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Tyler-Murphy/require-from-drive"
+    "url": "git+https://github.com/Tyler-Murphy/require-from-drive.git"
   },
   "bugs": "https://github.com/Tyler-Murphy/require-from-drive/issues"
 }
