@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl -L "${REQUIRE_FROM_DRIVE_SERVER_ADDRESS}?token=${REQUIRE_FROM_DRIVE_SERVER_TOKEN}&path=$1"
