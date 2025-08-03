@@ -1,0 +1,53 @@
+{
+  "name": "require-from-drive",
+  "version": "4.0.0",
+  "description": "Load JSON from Google Drive. This is a way to make sure configuration or secrets are always the same from person to person and server to server.",
+  "type": "module",
+  "files": [
+    "packages/appsScript/server.js",
+    "packages/node/vendor/*",
+    "packages/node/scripts/*",
+    "packages/node/requireFromDrive.ts",
+    "packages/node/schemas.ts",
+    "packages/node/terminal.ts"
+  ],
+  "main": "packages/node/requireFromDrive.ts",
+  "bin": {
+    "generate-secret": "packages/node/scripts/generateSecret.ts"
+  },
+  "types": "packages/node/requireFromDrive.ts",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "lint-node": "npx eslint --config packages/node/eslint.config.ts --flag unstable_native_nodejs_ts_config --fix packages/node/",
+    "lint-appsScript": "npx eslint --config packages/appsScript/eslint.config.ts --flag unstable_native_nodejs_ts_config --fix packages/appsScript/",
+    "lint": "npm run lint-node && npm run lint-appsScript",
+    "test": "node packages/node/test.ts",
+    "prepare": "tsc -p packages/appsScript/tsconfig.json && tsc -p packages/node/tsconfig.json"
+  },
+  "keywords": [
+    "require",
+    "google",
+    "drive"
+  ],
+  "author": "Tyler Murphy <tylermurphyj@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/google-apps-script": "^1.0.99",
+    "@types/node": "^24.0.15",
+    "del": "^8.0.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "p-limit": "^6.2.0",
+    "parallel-test": "^3.0.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.37.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tyler-Murphy/require-from-drive.git"
+  },
+  "bugs": "https://github.com/Tyler-Murphy/require-from-drive/issues"
+}

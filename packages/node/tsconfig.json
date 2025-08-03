@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"DOM",
+			"esnext",
+		],
+		"types": [
+			"node"
+		],
+		"target": "esnext",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"exactOptionalPropertyTypes": true,
+		"noEmit": true,
+		"skipLibCheck": true
+	},
+	"include": [
+		"requireFromDrive.ts",
+		"schemas.ts",
+		"test.ts",
+		"terminal.ts",
+		"scripts/generateSecret.ts",
+		"eslint.config.ts"
+	],
+	"exclude": [
+		"vendor/qr/src/*.ts"
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"types": ["google-apps-script"],
+		"target": "esnext",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"lib": [
+			"esnext"
+		],
+		"allowJs": true,
+		"checkJs": true,
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"exactOptionalPropertyTypes": true,
+		"noEmit": true
+	},
+	"include": [
+		"server.js",
+		"*.d.ts"
+	]
+}

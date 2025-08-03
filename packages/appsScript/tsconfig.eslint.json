@@ -1,0 +1,16 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		// Add "node" to the list of types to include
+		"types": [
+			"google-apps-script",
+			"node"
+		],
+		"allowJs": false,
+		"checkJs": false
+	},
+	// Only apply this configuration to the eslint config file
+	"include": [
+		"eslint.config.ts"
+	]
+}
