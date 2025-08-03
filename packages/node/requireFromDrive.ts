@@ -99,7 +99,7 @@ async function requireFromDrive ({
 let pendingToken: Promise<string> | null = null
 
 async function getToken(): Promise<string> {
-  pendingToken ??= promisify(execCallback)(`${nodePath.join(thisModuleDir, 'vendor', 'keymaster', 'keymaster')} get require-from-drive`)
+  pendingToken ??= promisify(execCallback)(`${nodePath.join(thisModuleDir, 'vendor', 'keymaster', 'require-from-drive')} get require-from-drive`)
   .then(process => process.stdout.trim())
   .finally(() => pendingToken = null)
 

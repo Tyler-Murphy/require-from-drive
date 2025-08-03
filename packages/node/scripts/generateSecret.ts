@@ -10,8 +10,7 @@ import {
   type ServerTokenConfiguration
 } from '../schemas.ts'
 
-// 2. Construct an absolute path to the 'keymaster' executable
-const keymasterPath = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '../vendor/keymaster/keymaster');
+const keymasterPath = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '../vendor/keymaster/require-from-drive');
 const credentialManagerTokenName = `require-from-drive`
 const tokenByteLength = 40
 const token = toBase32(randomBytes(tokenByteLength))
