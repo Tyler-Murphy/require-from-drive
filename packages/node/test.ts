@@ -58,14 +58,16 @@ test('can retrieve when TOTP is required', async () => {
 })
 
 test('rejects when TOTP is required and invalid TOTP is provided', async () => {
-  assert.deepStrictEqual(
-    await requireFromDriveSingleConcurrency({
+  const expectedErrorMessage: ResponseError[`message`] = `invalid totp query parameter`
+
+  await assert.rejects(() => requireFromDriveSingleConcurrency({
       token: tokenWithTotp,
       path: testPath,
       cache: false,
       cacheInFile: false,
     }),
-    testValue
+    new Error(expectedErrorMessage),
+    `For this test to pass, be sure to enter an invalid TOTP value when prompted`
   )
 })
 
