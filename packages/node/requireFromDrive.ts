@@ -10,6 +10,7 @@ import { getInput } from './terminal.ts'
 
 export {
   requireFromDrive,
+  fileCachePrefix,
 }
 
 const thisModuleDir = nodePath.dirname(fileURLToPath(import.meta.url))
@@ -29,13 +30,15 @@ async function requireFromDrive ({
   path,
   cache = true,
   cacheInFile = true,
+  token,
 }: {
   path: string,
   cache?: boolean | undefined,
   cacheInFile?: boolean | undefined,
+  token?: string | undefined,
 }): Promise<JSONValue> {
   const address = process.env[addressVariableName]
-  let token = process.env[tokenVariableName]
+  token ??= process.env[tokenVariableName]
 
   if (!address) {
     throw new Error(`Set the ${addressVariableName} environment variable`)

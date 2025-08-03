@@ -1,30 +1,55 @@
 import test from 'parallel-test'
+import pLimit from 'p-limit'
 import assert from 'assert'
 import {
+  deleteAsync
+} from 'del'
+import {
+  fileCachePrefix,
   requireFromDrive
 } from './requireFromDrive.ts'
-import type { ResponseError } from './schemas.ts'
+import {
+  assertIsDefined,
+  type ResponseError
+} from './schemas.ts'
+import {
+  glob,
+  readFile
+} from 'fs/promises'
 
-console.log('see the readme for instructions on testing the apps script')
-
+const ensureFileCacheIsEmpty = () => deleteAsync(`${fileCachePrefix}*`)
+const limiter = pLimit(1)
+const requireFromDriveSingleConcurrency = (...args: Parameters<typeof requireFromDrive>): ReturnType<typeof requireFromDrive> => limiter(async () => {
+  await ensureFileCacheIsEmpty()
+  return requireFromDrive(...args)
+})
 const testPath = 'testing/test.json'
 const testValue = {
   hi: 'there'
 }
+const tokenWithTotp = `token with TOTP`
+const tokenWithoutTotp = `token without TOTP`
 
-function requireTestFile ({ cache, cacheInFile }: Omit<Parameters<typeof requireFromDrive>[0], `path`> = {}) {
-  try {
-    return requireFromDrive({ path: testPath, cache, cacheInFile })
-  } catch (error) {
-    console.log(`This test requires the file ${testPath} to exist in the secret server folder in Google Drive and to contain ${JSON.stringify(testValue)}. If it doesn't exist, this test will fail. Set it up if necessary.`)
+console.log(`To run these tests for the first time`)
+console.log(`1. Create and deploy an apps script according to the readme instruction. Set up a token without TOTP using the generate-secret script as described in the readme.`)
+console.log(`2. Add a token that requires TOTP: "${tokenWithTotp}": {
+  "description": "test with TOTP",
+  "totpSecret": null
+}`)
+console.log(`2. Add a token that doesn't require TOTP: "${tokenWithoutTotp}": {
+  "description": "test without TOTP",
+  "totpSecret": "NTXCGZWVC2X6CZ3BBDLO64FB4QNUQPMZ"
+}`)
+console.log(`    - When the test with TOTP runs, use the TOTP secret above to generate a token by adding it to your phone or using an online TOTP generator like https://totp.danhersam.com/`)
+console.log(`3. Deploy a new version of the apps script now that those two tokens are added`)
+console.log(`4. Make a Google Doc at ${testPath} relative to the apps script. Its contents should be ${JSON.stringify(testValue)}`)
 
-    throw error
-  }
-}
 
-test('can retrieve secrets from Google Drive', async () => {
+test('can retrieve when TOTP is required', async () => {
   assert.deepStrictEqual(
-    await requireTestFile({
+    await requireFromDriveSingleConcurrency({
+      token: tokenWithTotp,
+      path: testPath,
       cache: false,
       cacheInFile: false,
     }),
@@ -32,11 +57,105 @@ test('can retrieve secrets from Google Drive', async () => {
   )
 })
 
+test('rejects when TOTP is required and invalid TOTP is provided', async () => {
+  assert.deepStrictEqual(
+    await requireFromDriveSingleConcurrency({
+      token: tokenWithTotp,
+      path: testPath,
+      cache: false,
+      cacheInFile: false,
+    }),
+    testValue
+  )
+})
+
+test('can retrieve using fingerprint-protected token from keychain', async () => {
+  assert.deepStrictEqual(
+    await requireFromDriveSingleConcurrency({
+      path: testPath,
+      cache: false,
+      cacheInFile: false,
+    }),
+    testValue
+  )
+})
+
+test('can retrieve when TOTP is not required', async () => {
+  assert.deepStrictEqual(
+    await requireFromDriveSingleConcurrency({
+      token: `token without TOTP`,
+      path: testPath,
+      cache: false,
+      cacheInFile: false,
+    }),
+    testValue
+  )
+})
+
+test(`cached content isn't stored as plain text`, async () => {
+  assert.deepStrictEqual(
+    await requireFromDriveSingleConcurrency({
+      token: tokenWithoutTotp,
+      path: testPath,
+      cache: false,
+      cacheInFile: true,
+    }),
+    testValue
+  )
+
+  const cacheFiles = await Array.fromAsync(await glob(`${fileCachePrefix}*`))
+
+  assert.strictEqual(cacheFiles.length, 1)
+
+  const cacheContents = JSON.parse(await readFile(assertIsDefined(cacheFiles[0]), `utf-8`))
+
+  assert.notDeepStrictEqual(cacheContents, testValue)
+
+  for (const [key, value] of Object.entries(testValue)) {
+    assert.ok(!JSON.stringify(cacheContents).includes(`"${key}"`))
+    assert.ok(!JSON.stringify(cacheContents).includes(JSON.stringify(value)))
+  }
+})
+
 test('rejects for files that do not exist', async () => {
   const expectedErrorMessage: ResponseError[`message`] = `could not find file`
 
   await assert.rejects(
-    () => requireFromDrive({ path: Math.random().toString() }),
+    () => requireFromDriveSingleConcurrency({
+      token: tokenWithoutTotp,
+      path: Math.random().toString(),
+      cache: false,
+      cacheInFile: false,
+    }),
+    new Error(expectedErrorMessage),
+  )
+})
+
+test('rejects for bad directory traversal', async () => {
+  const path = testPath.replace(`/`, `/../`)
+  const expectedErrorMessage: ResponseError[`message`] = `could not find folder ..`
+
+  await assert.rejects(
+    () => requireFromDriveSingleConcurrency({
+      token: tokenWithoutTotp,
+      path,
+      cache: false,
+      cacheInFile: false,
+    }),
+    new Error(expectedErrorMessage),
+  )
+})
+
+test('rejects for bad token', async () => {
+  const expectedErrorMessage: ResponseError[`message`] = `invalid token query parameter`
+
+  await assert.rejects(
+    () => requireFromDriveSingleConcurrency({
+      token: `invalidToken`,
+      path: testPath,
+      cache: false,
+      cacheInFile: false,
+    }),
     new Error(expectedErrorMessage),
   )
 })

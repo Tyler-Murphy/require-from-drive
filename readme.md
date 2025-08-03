@@ -44,3 +44,5 @@ The memory cache can be disabled by setting the `cache` option to `false`. The f
 ### Test
 
 To run the Apps Script tests, use the Apps Script IDE to select "test" from the "Run" menu. An error will be thrown and a message will pop up if any test fails.
+
+To run the local tests, run `npm test`. If you're running them for the first time, many will fail. Follow the instructions printed after you run the test command to get set up for testing.
