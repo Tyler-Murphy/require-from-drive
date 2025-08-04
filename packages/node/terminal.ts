@@ -10,7 +10,7 @@ const getInput = async (prompt: string, options?: {
 }): Promise<string> => {
   const terminal = readline.createInterface({
     input: process.stdin,
-    output: process.stdout,
+    output: process.stderr,
   })
 
   try {
