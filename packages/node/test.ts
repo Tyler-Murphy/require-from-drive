@@ -7,11 +7,11 @@ import {
 import {
   fileCachePrefix,
   requireFromDrive
-} from './requireFromDrive.ts'
+} from './requireFromDrive.js'
 import {
   assertIsDefined,
   type ResponseError
-} from './schemas.ts'
+} from './schemas.js'
 import {
   glob,
   readFile

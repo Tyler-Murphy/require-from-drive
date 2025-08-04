@@ -5,8 +5,8 @@ import { promisify } from 'node:util'
 import nodePath from 'node:path'
 import { fileURLToPath } from 'node:url'
 import crypto from 'node:crypto'
-import { assertIsResponse, type JSONValue, type RequestQueryParameters } from './schemas.ts'
-import { getInput } from './terminal.ts'
+import { assertIsResponse, type JSONValue, type RequestQueryParameters } from './schemas.js'
+import { getInput } from './terminal.js'
 
 export {
   requireFromDrive,

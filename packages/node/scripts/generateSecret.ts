@@ -1,14 +1,16 @@
+#!/usr/bin/env node
+
 import { randomBytes } from 'crypto'
-import encodeQR from '../vendor/qr/src/index.ts'
+import encodeQR from '../vendor/qr/src/index.js'
 import { execSync } from 'child_process'
-import { requireFromDrive } from '../requireFromDrive.ts'
+import { requireFromDrive } from '../requireFromDrive.js'
 import path from 'node:path'
 import url from 'node:url'
-import { getInput } from '../terminal.ts'
+import { getInput } from '../terminal.js'
 import {
   assertIsDefined,
   type ServerTokenConfiguration
-} from '../schemas.ts'
+} from '../schemas.js'
 
 const keymasterPath = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), '../vendor/keymaster/require-from-drive');
 const credentialManagerTokenName = `require-from-drive`

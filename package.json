@@ -1,21 +1,21 @@
 {
   "name": "require-from-drive",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Load JSON from Google Drive. This is a way to make sure configuration or secrets are always the same from person to person and server to server.",
   "type": "module",
   "files": [
     "packages/appsScript/server.js",
     "packages/node/vendor/*",
     "packages/node/scripts/*",
-    "packages/node/requireFromDrive.ts",
-    "packages/node/schemas.ts",
-    "packages/node/terminal.ts"
+    "packages/node/requireFromDrive.*",
+    "packages/node/schemas.*",
+    "packages/node/terminal.*"
   ],
-  "main": "packages/node/requireFromDrive.ts",
+  "main": "packages/node/requireFromDrive.js",
   "bin": {
-    "generate-secret": "packages/node/scripts/generateSecret.ts"
+    "generate-secret": "packages/node/scripts/generateSecret.js"
   },
-  "types": "packages/node/requireFromDrive.ts",
+  "types": "packages/node/requireFromDrive.d.ts",
   "engines": {
     "node": ">=24.0.0"
   },

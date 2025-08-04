@@ -10,7 +10,6 @@
 		"target": "esnext",
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
-		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
@@ -19,8 +18,9 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"exactOptionalPropertyTypes": true,
-		"noEmit": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"declaration": true,
+		"sourceMap": true
 	},
 	"include": [
 		"requireFromDrive.ts",
