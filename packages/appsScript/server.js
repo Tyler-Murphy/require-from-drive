@@ -1,6 +1,6 @@
 /* global DocumentApp, ContentService, Logger, Utilities, DriveApp, SpreadsheetApp */
 
-const version = '4.0.0'
+const version = '4.0.3'
 const thisFolderId = 'your ID here'
 const spreadsheetLoggingUrl = 'your spreadsheet URL here'
 
