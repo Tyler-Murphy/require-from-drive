@@ -161,3 +161,17 @@ test('rejects for bad token', async () => {
     new Error(expectedErrorMessage),
   )
 })
+
+test('rejects for bad token found in object prototype', async () => {
+  const expectedErrorMessage: ResponseError[`message`] = `invalid token query parameter`
+
+  await assert.rejects(
+    () => requireFromDriveSingleConcurrency({
+      token: `toString`,
+      path: testPath,
+      cache: false,
+      cacheInFile: false,
+    }),
+    new Error(expectedErrorMessage),
+  )
+})

@@ -1,6 +1,6 @@
 /* global DocumentApp, ContentService, Logger, Utilities, DriveApp, SpreadsheetApp */
 
-const version = '4.0.3'
+const version = '4.0.4'
 const thisFolderId = 'your ID here'
 const spreadsheetLoggingUrl = 'your spreadsheet URL here'
 
@@ -29,7 +29,7 @@ function doGet (request) {
     return errorResponse('missing token query parameter')
   }
 
-  if (!(token in tokens)) {
+  if (!Object.hasOwn(tokens, token)) {
     return errorResponse('invalid token query parameter')
   }
 
@@ -291,6 +291,7 @@ function test () {
   const tests = []
   const validToken = 'valid'
   const invalidToken = Math.random().toString()
+  const invalidTokenMatchingObjectPrototypeKey = `toString`
   const thisFolder = DriveApp.getFolderById(thisFolderId)
 
   tokens[validToken] = {
@@ -317,6 +318,21 @@ function test () {
     assertDeepStrictEqual(
       testGetResponse({
         token: invalidToken,
+        path: 'path',
+        totp: null,
+      }),
+      {
+        version,
+        status: 'error',
+        message: 'invalid token query parameter',
+      }
+    )
+  })
+
+  tests.push(function invalidTokenMatchingObjectPrototypeKeyCausesError () {
+    assertDeepStrictEqual(
+      testGetResponse({
+        token: invalidTokenMatchingObjectPrototypeKey,
         path: 'path',
         totp: null,
       }),
